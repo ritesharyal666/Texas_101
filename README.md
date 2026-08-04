@@ -13,7 +13,6 @@ DAY 3
 
    ```bash
    git clone https://github.com/ritesharyal666/Texas_101
-   cd DJANGO-D2
    ```
 
 2. Create and activate a virtual environment
