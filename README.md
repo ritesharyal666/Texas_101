@@ -50,7 +50,10 @@ DAY 3
    python manage.py createsuperuser
    ```
 
-6. Run the development server
+6. Add multiple Posts from Admin Panel (To prevent error on loading home page ) 
+
+
+7. Run the development server
 
    ```bash
    python manage.py runserver
