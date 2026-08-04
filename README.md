@@ -12,7 +12,7 @@ DAY 3
 1. Clone the repository
 
    ```bash
-   git clone <repo-url>
+   git clone https://github.com/ritesharyal666/Texas_101
    cd DJANGO-D2
    ```
 
