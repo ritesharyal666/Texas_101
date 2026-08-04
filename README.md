@@ -43,17 +43,23 @@ DAY 3
    python manage.py makemigrations
    python manage.py migrate
    ```
+   If no changes detected
+   
+    ```bash
+   python manage.py makemigrations blog 
+   python manage.py migrate
+   ```
 
-5. Create a superuser (to access `/admin/`)
+6. Create a superuser (to access `/admin/`)
 
    ```bash
    python manage.py createsuperuser
    ```
 
-6. Add multiple Posts from Admin Panel (To prevent error on loading home page ) 
+7. Add multiple Posts from Admin Panel (To prevent error on loading home page ) 
 
 
-7. Run the development server
+8. Run the development server
 
    ```bash
    python manage.py runserver
