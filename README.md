@@ -1,6 +1,6 @@
 # BlogCMS
 
-DAY 3 
+DAY 4
 
 ## Requirements
 
@@ -35,6 +35,7 @@ DAY 3
 
    ```bash
    pip install django
+   pip install Pillow
    ```
 
 4. Apply migrations

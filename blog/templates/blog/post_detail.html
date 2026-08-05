@@ -1,0 +1,35 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+<title>{{ post.title }} | BlogCMS</title>
+{% endblock %}
+
+{% block content %}
+<article>
+    <header>
+        <h1>{{ post.title }}</h1>
+        <p>
+            By {{ post.author.username }} in {{ post.category|default:"Uncategorized" }}
+            on {{ post.created_at|date:"F j, Y" }}
+        </p>
+    </header>
+
+    {% if post.featured_image %}
+    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+    {% endif %}
+
+    <p>{{ post.content }}</p>
+</article>
+
+<section>
+    <h2>Comments</h2>
+    {% for comment in post.comments.all %}
+    <article>
+        <p>{{ comment.content }}</p>
+        <p>By {{ comment.user.username }} on {{ comment.created_at|date:"F j, Y" }}</p>
+    </article>
+    {% empty %}
+    <p>No comments yet.</p>
+    {% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+<title>Search | BlogCMS</title>
+{% endblock %}
+
+{% block content %}
+<h1>Search Posts</h1>
+
+<form method="GET" action="{% url 'search' %}">
+    <label for="search_query">Search by title</label>
+    <input type="text"  name="search_query" value="{{ query }}" placeholder="Search...">
+    <button type="submit">Search</button>
+</form>
+
+{% if query %}
+<section>
+    <h2>Results for &quot;{{ query }}&quot;</h2>
+    {% for post in results %}
+    <article>
+        <h3><a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a></h3>
+    </article>
+    {% empty %}
+    <p>No posts matched &quot;{{ query }}&quot;.</p>
+    {% endfor %}
+</section>
+{% endif %}
+{% endblock %}
