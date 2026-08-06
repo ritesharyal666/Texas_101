@@ -90,9 +90,10 @@ def post_edit_view(request, slug):
         post.save()
         return redirect('post_detail', slug=post.slug)
     context = {
-        'post': post
+        'post': post,
+        'form': PostForm(instance=post),
     }
-    return render(request, 'blog/post_edit.html', context=context)
+    return render(request, 'blog/post_create.html', context=context)
 
 def post_delete_view(request, slug):
     if not request.user.is_authenticated:
