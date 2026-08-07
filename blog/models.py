@@ -25,7 +25,7 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
-        while Post.objects.filter(slug=self.slug).exists():
+        while Post.objects.exclude(pk=self.pk).filter(slug=self.slug).exists():
             self.slug = f"{self.slug}-{Post.objects.filter(slug__startswith=self.slug).count() + 1}"
         super().save(*args, **kwargs)
     

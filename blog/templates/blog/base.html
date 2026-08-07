@@ -15,7 +15,9 @@
     <a href="{% url 'contact' %}">Contact</a>
     <a href="{% url 'search' %}">Search</a>
     {% if user.is_authenticated %}
+        {% if perms.blog.add_post %}
         <a href="{% url 'post_create' %}">Create Post</a>
+        {% endif %}
         <span>Hi, {{ user.username }}</span>
         <a href="{% url 'logout' %}">Logout</a>
     {% else %}

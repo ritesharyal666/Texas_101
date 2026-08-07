@@ -2,12 +2,13 @@ from django.shortcuts import get_object_or_404, render,redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required,permission_required
 
 from blog.forms import CommentForm, PostForm
 from .models import Post
 
 def home_view(request):
-    posts = Post.objects.all()[:4]
+    posts = Post.objects.all().order_by('-created_at')[:4]
     context={
         'posts': posts
     }
@@ -30,7 +31,7 @@ def search_view(request):
     return render(request,'blog/search.html',context=context)
 
 def post_list_view(request):
-    posts = Post.objects.all()
+    posts = Post.objects.all().order_by('-created_at')
     context={
         'posts':posts
     }
@@ -63,9 +64,10 @@ def user_logout_view(request):
     return redirect('home')
 
 
+@login_required
+@permission_required('blog.add_post', raise_exception=True)
 def post_create_view(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
+   
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -77,17 +79,16 @@ def post_create_view(request):
         form = PostForm()
     return render(request, 'blog/post_create.html', context={'form': form})
 
+@login_required
+@permission_required('blog.change_post', raise_exception=True)
 def post_edit_view(request, slug):
-    if not request.user.is_authenticated:
-        return redirect('login')
     post = Post.objects.get(slug=slug)
+    if post.author != request.user:
+        return HttpResponse("You are not authorized to edit this post.", status=403)
     if request.method == 'POST':
-        post.title = request.POST.get('title')
-        post.content = request.POST.get('content')
-        post.category_id = request.POST.get('category')
-        if 'featured_image' in request.FILES:
-            post.featured_image = request.FILES['featured_image']
-        post.save()
+       form = PostForm(request.POST, request.FILES, instance=post)
+       if form.is_valid(): 
+        form.save()
         return redirect('post_detail', slug=post.slug)
     context = {
         'post': post,
@@ -95,10 +96,13 @@ def post_edit_view(request, slug):
     }
     return render(request, 'blog/post_create.html', context=context)
 
+@login_required
+@permission_required('blog.delete_post', raise_exception=True)
 def post_delete_view(request, slug):
-    if not request.user.is_authenticated:
-        return redirect('login')
+   
     post = Post.objects.get(slug=slug)
+    if post.author != request.user:
+        return HttpResponse("You are not authorized to delete this post.", status=403)
     if request.method == 'POST':
         post.delete()
         return redirect('home')
@@ -107,6 +111,7 @@ def post_delete_view(request, slug):
     }
     return render(request, 'blog/post_confirm_delete.html', context=context)
 
+@login_required
 def add_comment_view(request, slug):
     post = get_object_or_404(Post, slug=slug)
     if request.method == 'POST':
@@ -114,7 +119,6 @@ def add_comment_view(request, slug):
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = post
-            comment.author = request.user
+            comment.user = request.user
             comment.save()
     return redirect('post_detail', slug=post.slug)
-

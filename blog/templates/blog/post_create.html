@@ -1,6 +1,9 @@
 {% extends 'blog/base.html' %}
+{% block title %}
+<title>{% if post %}Edit Post{% else %}Create Post{% endif %} | BlogCMS</title>
+{% endblock %}
 {% block content %}
-    <h2>{{ title }}</h2>
+    <h2>{% if post %}Edit Post{% else %}Create Post{% endif %}</h2>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}

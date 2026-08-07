@@ -10,10 +10,15 @@
     <hr>
     <p>{{ post.content }}</p>
 
-    {% if user.is_authenticated %}
+    {% if perms.blog.change_post or perms.blog.delete_post %}
         <p>
-            <a href="{% url 'post_edit' post.slug %}">Edit</a> |
+            {% if perms.blog.change_post %}
+            <a href="{% url 'post_edit' post.slug %}">Edit</a>
+            {% endif %}
+            {% if perms.blog.change_post and perms.blog.delete_post %} | {% endif %}
+            {% if perms.blog.delete_post %}
             <a href="{% url 'post_delete' post.slug %}">Delete</a>
+            {% endif %}
         </p>
     {% endif %}
 
@@ -22,7 +27,7 @@
 
     {% for comment in post.comments.all %}
         <div style="border-bottom: 1px solid #ddd; padding: 10px 0;">
-            <p><strong>{{ comment.author.username }}</strong> — {{ comment.created_at|date:"F j, Y" }}</p>
+            <p><strong>{{ comment.user.username }}</strong> — {{ comment.created_at|date:"F j, Y" }}</p>
             <p>{{ comment.content }}</p>
         </div>
     {% empty %}
